@@ -1,7 +1,7 @@
 package com.github.guiziin227.restspringboot.exception.handler;
 
 import com.github.guiziin227.restspringboot.exception.ExceptionResponse;
-import com.github.guiziin227.restspringboot.exception.UnsupportedMathOperationException;
+import com.github.guiziin227.restspringboot.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,7 +26,7 @@ public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({UnsupportedMathOperationException.class})
+    @ExceptionHandler({ResourceNotFoundException.class})
     public final ResponseEntity<ExceptionResponse> handleBadRequestException(Exception ex, WebRequest request) {
         ExceptionResponse resp = new ExceptionResponse(
                 new Date(),

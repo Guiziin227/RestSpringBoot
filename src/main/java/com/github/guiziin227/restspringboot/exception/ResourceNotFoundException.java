@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * This exception is thrown when a mathematical operation is not supported.
  */
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class UnsupportedMathOperationException extends RuntimeException {
-    public UnsupportedMathOperationException(String message) {
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message) {
         super(message);
     }
 }
