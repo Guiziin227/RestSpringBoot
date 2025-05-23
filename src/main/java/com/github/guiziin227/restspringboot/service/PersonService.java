@@ -30,6 +30,11 @@ public class PersonService {
                 () -> new ResourceNotFoundException("Person not found!")
         );
 
+        p.setAddress(person.getAddress());
+        p.setFirstName(person.getFirstName());
+        p.setLastName(person.getLastName());
+        p.setGender(person.getGender());
+
         return personRepository.save(p);
     }
 
