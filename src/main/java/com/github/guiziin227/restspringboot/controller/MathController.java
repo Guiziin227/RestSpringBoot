@@ -1,7 +1,9 @@
-package com.github.guiziin227.restspringboot.controller;
+package br.com.erudio.controllers;
+
 
 import com.github.guiziin227.restspringboot.exception.UnsupportedMathOperationException;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.github.guiziin227.restspringboot.math.NumberConverter;
+import com.github.guiziin227.restspringboot.math.SimpleMath;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,76 +12,70 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/math")
 public class MathController {
 
+    private SimpleMath math = new SimpleMath();
+
+    // http://localhost:8080/math/sum/3/5
     @RequestMapping("/sum/{numberOne}/{numberTwo}")
     public Double sum(
             @PathVariable("numberOne") String numberOne,
             @PathVariable("numberTwo") String numberTwo
-    ) throws UnsupportedMathOperationException {
-        if (!isNumeric(numberOne) || !isNumeric(numberTwo))
-            throw new UnsupportedMathOperationException("Please set a numeric value");
-        return convertToDouble(numberOne) + convertToDouble(numberTwo);
+    ) throws Exception {
+        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo))
+            throw new UnsupportedMathOperationException("Please set a numeric value!");
+        return math.sum(NumberConverter.convertToDouble(numberOne), NumberConverter.convertToDouble(numberTwo));
     }
 
+    // http://localhost:8080/math/subtraction/3/5s
     @RequestMapping("/subtraction/{numberOne}/{numberTwo}")
     public Double subtraction(
             @PathVariable("numberOne") String numberOne,
             @PathVariable("numberTwo") String numberTwo
-    ) throws UnsupportedMathOperationException {
-        if (!isNumeric(numberOne) || !isNumeric(numberTwo))
-            throw new UnsupportedMathOperationException("Please set a numeric value");
-        return convertToDouble(numberOne) - convertToDouble(numberTwo);
+    ) throws Exception {
+        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo))
+            throw new UnsupportedMathOperationException("Please set a numeric value!");
+        return math.subtraction(NumberConverter.convertToDouble(numberOne), NumberConverter.convertToDouble(numberTwo));
     }
 
+    // http://localhost:8080/math/multiplication/3/5
     @RequestMapping("/multiplication/{numberOne}/{numberTwo}")
     public Double multiplication(
             @PathVariable("numberOne") String numberOne,
             @PathVariable("numberTwo") String numberTwo
-    ) throws UnsupportedMathOperationException {
-        if (!isNumeric(numberOne) || !isNumeric(numberTwo))
-            throw new UnsupportedMathOperationException("Please set a numeric value");
-        return convertToDouble(numberOne) * convertToDouble(numberTwo);
+    ) throws Exception {
+        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo))
+            throw new UnsupportedMathOperationException("Please set a numeric value!");
+        return math.multiplication(NumberConverter.convertToDouble(numberOne), NumberConverter.convertToDouble(numberTwo));
     }
 
+    // http://localhost:8080/math/division/3/5
     @RequestMapping("/division/{numberOne}/{numberTwo}")
     public Double division(
             @PathVariable("numberOne") String numberOne,
             @PathVariable("numberTwo") String numberTwo
-    ) throws UnsupportedMathOperationException {
-        if (!isNumeric(numberOne) || !isNumeric(numberTwo))
-            throw new UnsupportedMathOperationException("Please set a numeric value");
-        return convertToDouble(numberOne) / convertToDouble(numberTwo);
+    ) throws Exception {
+        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo))
+            throw new UnsupportedMathOperationException("Please set a numeric value!");
+        return math.division(NumberConverter.convertToDouble(numberOne), NumberConverter.convertToDouble(numberTwo));
     }
 
+    // http://localhost:8080/math/mean/3/5
     @RequestMapping("/mean/{numberOne}/{numberTwo}")
     public Double mean(
             @PathVariable("numberOne") String numberOne,
             @PathVariable("numberTwo") String numberTwo
-    ) throws UnsupportedMathOperationException {
-        if (!isNumeric(numberOne) || !isNumeric(numberTwo))
-            throw new UnsupportedMathOperationException("Please set a numeric value");
-        return (convertToDouble(numberOne) + convertToDouble(numberTwo)) / 2;
+    ) throws Exception {
+        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo))
+            throw new UnsupportedMathOperationException("Please set a numeric value!");
+        return math.mean(NumberConverter.convertToDouble(numberOne), NumberConverter.convertToDouble(numberTwo));
     }
 
-    @RequestMapping("/squareRoot/{number}")
-    public Double squareRoot(
+    // http://localhost:8080/math/squareRoot/81
+    @RequestMapping("/squareroot/{number}")
+    public Double mean(
             @PathVariable("number") String number
-    ) throws UnsupportedMathOperationException {
-        if (!isNumeric(number))
-            throw new UnsupportedMathOperationException("Please set a numeric value");
-        return Math.sqrt(convertToDouble(number));
-    }
-
-
-    private boolean isNumeric(String number) {
-        if (number == null || number.isEmpty()) return false;
-        String n = number.replace(",", ".");
-        return (n.matches("[-+]?[0-9]*\\.?[0-9]+"));
-    }
-
-    private Double convertToDouble(String number) throws UnsupportedMathOperationException {
-        if (number == null || number.isEmpty())
-            throw new UnsupportedMathOperationException("Please set a numeric value");
-        String n = number.replace(",", ".");
-        return Double.parseDouble(n);
+    ) throws Exception {
+        if(!NumberConverter.isNumeric(number))
+            throw new com.github.guiziin227.restspringboot.exception.UnsupportedMathOperationException("Please set a numeric value!");
+        return math.squareRoot(NumberConverter.convertToDouble(number));
     }
 }
