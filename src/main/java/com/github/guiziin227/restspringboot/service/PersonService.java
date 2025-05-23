@@ -6,7 +6,6 @@ import com.github.guiziin227.restspringboot.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
@@ -23,16 +22,21 @@ public class PersonService {
 
     public Person create(Person person) {
         logger.info("Creating one person!");
-        return person;
+        return personRepository.save(person);
     }
 
     public Person update(Person person) {
         logger.info("Updating one person!");
-        return person;
+        Person p =  personRepository.findById(person.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("Person not found!")
+        );
+
+        return personRepository.save(p);
     }
 
     public void delete(Long id) {
         logger.info("Deleting one person!");
+        personRepository.deleteById(id);
     }
 
     public List<Person> findAll() {
