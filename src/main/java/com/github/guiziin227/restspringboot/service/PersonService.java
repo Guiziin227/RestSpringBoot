@@ -15,8 +15,13 @@ public class PersonService {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
+    public Person create(Person person) {
+        logger.info("Creating one person!");
+        return person;
+    }
 
     public List<Person> findAll() {
+        logger.info("findAll people!");
         List<Person> persons = new ArrayList<>();
 
         for(int i = 0; i < 8; i++) {
