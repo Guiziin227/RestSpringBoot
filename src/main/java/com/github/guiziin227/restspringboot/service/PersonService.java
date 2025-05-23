@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class PersonService {
 
-    private final AtomicLong counter = new AtomicLong();
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     private final PersonRepository personRepository;
