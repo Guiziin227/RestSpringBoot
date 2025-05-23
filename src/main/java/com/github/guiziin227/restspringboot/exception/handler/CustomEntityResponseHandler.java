@@ -27,12 +27,12 @@ public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler 
     }
 
     @ExceptionHandler({ResourceNotFoundException.class})
-    public final ResponseEntity<ExceptionResponse> handleBadRequestException(Exception ex, WebRequest request) {
+    public final ResponseEntity<ExceptionResponse> handleNotFoundException(Exception ex, WebRequest request) {
         ExceptionResponse resp = new ExceptionResponse(
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false)
         );
-        return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(resp, HttpStatus.NOT_FOUND);
     }
 }
