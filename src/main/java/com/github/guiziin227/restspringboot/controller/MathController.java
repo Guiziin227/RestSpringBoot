@@ -1,6 +1,4 @@
-package br.com.erudio.controllers;
-
-
+package com.github.guiziin227.restspringboot.controller;
 import com.github.guiziin227.restspringboot.exception.UnsupportedMathOperationException;
 import com.github.guiziin227.restspringboot.math.NumberConverter;
 import com.github.guiziin227.restspringboot.math.SimpleMath;
@@ -14,7 +12,6 @@ public class MathController {
 
     private SimpleMath math = new SimpleMath();
 
-    // http://localhost:8080/math/sum/3/5
     @RequestMapping("/sum/{numberOne}/{numberTwo}")
     public Double sum(
             @PathVariable("numberOne") String numberOne,
@@ -47,7 +44,6 @@ public class MathController {
         return math.multiplication(NumberConverter.convertToDouble(numberOne), NumberConverter.convertToDouble(numberTwo));
     }
 
-    // http://localhost:8080/math/division/3/5
     @RequestMapping("/division/{numberOne}/{numberTwo}")
     public Double division(
             @PathVariable("numberOne") String numberOne,
@@ -75,7 +71,7 @@ public class MathController {
             @PathVariable("number") String number
     ) throws Exception {
         if(!NumberConverter.isNumeric(number))
-            throw new com.github.guiziin227.restspringboot.exception.UnsupportedMathOperationException("Please set a numeric value!");
+            throw new UnsupportedMathOperationException("Please set a numeric value!");
         return math.squareRoot(NumberConverter.convertToDouble(number));
     }
 }
