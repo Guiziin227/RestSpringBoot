@@ -1,7 +1,6 @@
 package com.github.guiziin227.restspringboot.controller;
 
-import com.github.guiziin227.restspringboot.dto.PersonDTO;
-import com.github.guiziin227.restspringboot.model.Person;
+import com.github.guiziin227.restspringboot.dto.v1.PersonDTO;
 import com.github.guiziin227.restspringboot.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

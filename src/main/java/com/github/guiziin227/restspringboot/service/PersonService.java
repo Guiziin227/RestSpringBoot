@@ -1,6 +1,6 @@
 package com.github.guiziin227.restspringboot.service;
 
-import com.github.guiziin227.restspringboot.dto.PersonDTO;
+import com.github.guiziin227.restspringboot.dto.v1.PersonDTO;
 import static com.github.guiziin227.restspringboot.dto.mapper.ObjectMapper.parseListObjects;
 import static com.github.guiziin227.restspringboot.dto.mapper.ObjectMapper.parseObject;
 import com.github.guiziin227.restspringboot.exception.ResourceNotFoundException;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 @Service

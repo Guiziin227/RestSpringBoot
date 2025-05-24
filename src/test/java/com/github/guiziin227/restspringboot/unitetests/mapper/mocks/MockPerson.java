@@ -1,6 +1,6 @@
 package com.github.guiziin227.restspringboot.unitetests.mapper.mocks;
 
-import com.github.guiziin227.restspringboot.dto.PersonDTO;
+import com.github.guiziin227.restspringboot.dto.v1.PersonDTO;
 import com.github.guiziin227.restspringboot.model.Person;
 
 import java.util.ArrayList;
