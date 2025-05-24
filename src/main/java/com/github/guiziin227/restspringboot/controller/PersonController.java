@@ -1,6 +1,7 @@
 package com.github.guiziin227.restspringboot.controller;
 
 import com.github.guiziin227.restspringboot.dto.v1.PersonDTO;
+import com.github.guiziin227.restspringboot.dto.v2.PersonDTOV2;
 import com.github.guiziin227.restspringboot.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -38,6 +39,12 @@ public class PersonController {
             produces = MediaType.APPLICATION_JSON_VALUE)
         public PersonDTO create(@RequestBody PersonDTO person) {
         return personService.create(person);
+    }
+
+    @PostMapping(name = "/v2",consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public PersonDTOV2 create(@RequestBody PersonDTOV2 person) {
+        return personService.createV2(person);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
