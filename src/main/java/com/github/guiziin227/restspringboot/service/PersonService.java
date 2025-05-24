@@ -1,5 +1,8 @@
 package com.github.guiziin227.restspringboot.service;
 
+import com.github.guiziin227.restspringboot.dto.PersonDTO;
+import static com.github.guiziin227.restspringboot.dto.mapper.ObjectMapper.parseListObjects;
+import static com.github.guiziin227.restspringboot.dto.mapper.ObjectMapper.parseObject;
 import com.github.guiziin227.restspringboot.exception.ResourceNotFoundException;
 import com.github.guiziin227.restspringboot.model.Person;
 import com.github.guiziin227.restspringboot.repository.PersonRepository;
@@ -19,12 +22,13 @@ public class PersonService {
     private final PersonRepository personRepository;
 
 
-    public Person create(Person person) {
+    public PersonDTO create(PersonDTO person) {
         logger.info("Creating one person!");
-        return personRepository.save(person);
+        var entity = parseObject(person, Person.class);
+        return parseObject(personRepository.save(entity), PersonDTO.class);
     }
 
-    public Person update(Person person) {
+    public PersonDTO update(PersonDTO person) {
         logger.info("Updating one person!");
         Person p =  personRepository.findById(person.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Person not found!")
@@ -35,7 +39,7 @@ public class PersonService {
         p.setLastName(person.getLastName());
         p.setGender(person.getGender());
 
-        return personRepository.save(p);
+        return parseObject(personRepository.save(p), PersonDTO.class);
     }
 
     public void delete(Long id) {
@@ -43,17 +47,18 @@ public class PersonService {
         personRepository.deleteById(id);
     }
 
-    public List<Person> findAll() {
+    public List<PersonDTO> findAll() {
         logger.info("findAll people!");
-        return personRepository.findAll();
+        return parseListObjects(personRepository.findAll(), PersonDTO.class);
     }
 
 
-    public Person findById(Long id) {
+    public PersonDTO findById(Long id) {
         logger.info("Finding one person!");
-        return personRepository.findById(id).orElseThrow(
+        var entity = personRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Person not found!")
         );
+        return parseObject(entity, PersonDTO.class);
     }
 
 }
