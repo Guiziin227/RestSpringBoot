@@ -1,5 +1,6 @@
 package com.github.guiziin227.restspringboot.service;
 
+import com.github.guiziin227.restspringboot.dto.mapper.custom.PersonMapper;
 import com.github.guiziin227.restspringboot.dto.v1.PersonDTO;
 import static com.github.guiziin227.restspringboot.dto.mapper.ObjectMapper.parseListObjects;
 import static com.github.guiziin227.restspringboot.dto.mapper.ObjectMapper.parseObject;
@@ -9,6 +10,7 @@ import com.github.guiziin227.restspringboot.exception.ResourceNotFoundException;
 import com.github.guiziin227.restspringboot.model.Person;
 import com.github.guiziin227.restspringboot.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +24,9 @@ public class PersonService {
 
     private final PersonRepository personRepository;
 
+    @Autowired
+    private PersonMapper personMapper;
+
 
     public PersonDTO create(PersonDTO person) {
         logger.info("Creating one person!");
@@ -29,10 +34,10 @@ public class PersonService {
         return parseObject(personRepository.save(entity), PersonDTO.class);
     }
 
-    public PersonDTOV2 createV2(PersonDTO person) {
+    public PersonDTOV2 createV2(PersonDTOV2 person) {
         logger.info("Creating one person!");
-        var entity = parseObject(person, Person.class);
-        return parseObject(personRepository.save(entity), PersonDTO.class);
+        var entity = personMapper.convertDTOToEntity(person);
+        return personMapper.convertEntityToDTO(personRepository.save(entity));
     }
 
     public PersonDTO update(PersonDTO person) {
