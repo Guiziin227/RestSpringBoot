@@ -11,6 +11,7 @@ public class PersonMapper {
     //converter entidade para DTO
     public PersonDTOV2 convertEntityToDTO(Person person) {
         PersonDTOV2 dto = new PersonDTOV2();
+        dto.setId(person.getId());
         dto.setAddress(person.getAddress());
         dto.setFirstName(person.getFirstName());
         dto.setBirthDate(new Date());
@@ -23,6 +24,7 @@ public class PersonMapper {
     //converter DTO para entidade
     public Person convertDTOToEntity(PersonDTOV2 dto) {
         Person person = new Person();
+        person.setId(dto.getId());
         person.setAddress(dto.getAddress());
         person.setFirstName(dto.getFirstName());
         person.setLastName(dto.getLastName());
