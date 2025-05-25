@@ -1,4 +1,4 @@
-package com.github.guiziin227.restspringboot.dto.v1;
+package com.github.guiziin227.restspringboot.dto;
 
 import java.io.Serializable;
 import java.util.Objects;

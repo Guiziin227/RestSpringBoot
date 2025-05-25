@@ -1,7 +1,7 @@
 package com.github.guiziin227.restspringboot.service;
 
 import com.github.guiziin227.restspringboot.dto.mapper.custom.PersonMapper;
-import com.github.guiziin227.restspringboot.dto.v1.PersonDTO;
+import com.github.guiziin227.restspringboot.dto.PersonDTO;
 import static com.github.guiziin227.restspringboot.dto.mapper.ObjectMapper.parseListObjects;
 import static com.github.guiziin227.restspringboot.dto.mapper.ObjectMapper.parseObject;
 
@@ -32,12 +32,6 @@ public class PersonService {
         logger.info("Creating one person!");
         var entity = parseObject(person, Person.class);
         return parseObject(personRepository.save(entity), PersonDTO.class);
-    }
-
-    public PersonDTOV2 createV2(PersonDTOV2 person) {
-        logger.info("Creating one person!");
-        var entity = personMapper.convertDTOToEntity(person);
-        return personMapper.convertEntityToDTO(personRepository.save(entity));
     }
 
     public PersonDTO update(PersonDTO person) {
