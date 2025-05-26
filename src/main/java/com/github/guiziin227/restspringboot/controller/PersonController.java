@@ -30,6 +30,10 @@ public class PersonController {
     public PersonDTO findById(@PathVariable("id") Long id) {
         PersonDTO person = personService.findById(id);
         person.setBirthDate(new Date()); // apenas para simular uma data, pois o model não possui data de nascimento
+        person.setPhoneNumber("55991654341"); // apenas para simular um telefone, pois o model não possui telefone
+       // person.setPhoneNumber("");
+        //person.setLastName(null);
+        person.setSensitiveData("I am sensitive data, do not show me!");
         return person;
     }
 

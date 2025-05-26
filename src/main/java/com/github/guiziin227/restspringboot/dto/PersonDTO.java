@@ -1,6 +1,8 @@
 package com.github.guiziin227.restspringboot.dto;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -11,6 +13,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @JsonPropertyOrder({"id", "firstName", "lastName", "address", "gender"})
+@JsonFilter("PersonFilter")
 public class PersonDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -20,8 +23,13 @@ public class PersonDTO implements Serializable {
     @JsonProperty("first_name")
     private String firstName;
     @JsonProperty("last_name")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String lastName;
+
     private String address;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private String phoneNumber;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date birthDate;
@@ -29,7 +37,18 @@ public class PersonDTO implements Serializable {
     @JsonSerialize(using = GenderSerializer.class)
     private String gender;
 
+
+    private String sensitiveData;
+
     public PersonDTO() {}
+
+    public String getSensitiveData() {
+        return sensitiveData;
+    }
+
+    public void setSensitiveData(String sensitiveData) {
+        this.sensitiveData = sensitiveData;
+    }
 
     public Long getId() {
         return id;
@@ -77,6 +96,14 @@ public class PersonDTO implements Serializable {
 
     public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
