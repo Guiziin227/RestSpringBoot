@@ -26,14 +26,26 @@ public class PersonController {
     private PersonService personService;
 
 
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public PersonDTO create(@RequestBody PersonDTO person) {
+        return personService.create(person);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        personService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public PersonDTO findById(@PathVariable("id") Long id) {
         PersonDTO person = personService.findById(id);
-        person.setBirthDate(new Date()); // apenas para simular uma data, pois o model não possui data de nascimento
-        person.setPhoneNumber("55991654341"); // apenas para simular um telefone, pois o model não possui telefone
-       // person.setPhoneNumber("");
+        //person.setBirthDate(new Date()); // apenas para simular uma data, pois o model não possui data de nascimento
+        //person.setPhoneNumber("55991654341"); // apenas para simular um telefone, pois o model não possui telefone
+        // person.setPhoneNumber("");
         //person.setLastName(null);
-        person.setSensitiveData("I am sensitive data, do not show me!");
+        //person.setSensitiveData("I am sensitive data, do not show me!");
         return person;
     }
 
@@ -42,22 +54,11 @@ public class PersonController {
         return personService.findAll();
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-        public PersonDTO create(@RequestBody PersonDTO person) {
-        return personService.create(person);
-    }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public PersonDTO update(@PathVariable("id") Long id,@RequestBody PersonDTO person) {
         return personService.update(person);
-    }
-
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        personService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 
 }

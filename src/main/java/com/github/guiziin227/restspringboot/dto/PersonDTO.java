@@ -20,35 +20,25 @@ public class PersonDTO implements Serializable {
 
     private Long id;
 
-    @JsonProperty("first_name")
     private String firstName;
-    @JsonProperty("last_name")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String lastName;
-
     private String address;
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private String phoneNumber;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date birthDate;
 
     @JsonSerialize(using = GenderSerializer.class)
     private String gender;
 
+    //@JsonInclude(JsonInclude.Include.NON_EMPTY)
+   // private String phoneNumber;
 
-    private String sensitiveData;
+    //@JsonFormat(pattern = "dd/MM/yyyy")
+    //private Date birthDate;
+
+
+
+   // private String sensitiveData;
 
     public PersonDTO() {}
 
-    public String getSensitiveData() {
-        return sensitiveData;
-    }
-
-    public void setSensitiveData(String sensitiveData) {
-        this.sensitiveData = sensitiveData;
-    }
 
     public Long getId() {
         return id;
@@ -88,22 +78,6 @@ public class PersonDTO implements Serializable {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public Date getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 
     @Override
