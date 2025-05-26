@@ -1,7 +1,6 @@
 package com.github.guiziin227.restspringboot.controller;
 
 import com.github.guiziin227.restspringboot.dto.PersonDTO;
-import com.github.guiziin227.restspringboot.dto.v2.PersonDTOV2;
 import com.github.guiziin227.restspringboot.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -26,8 +24,8 @@ public class PersonController {
     private PersonService personService;
 
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public PersonDTO create(@RequestBody PersonDTO person) {
         return personService.create(person);
     }
@@ -38,26 +36,25 @@ public class PersonController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public PersonDTO findById(@PathVariable("id") Long id) {
-        PersonDTO person = personService.findById(id);
         //person.setBirthDate(new Date()); // apenas para simular uma data, pois o model não possui data de nascimento
         //person.setPhoneNumber("55991654341"); // apenas para simular um telefone, pois o model não possui telefone
         // person.setPhoneNumber("");
         //person.setLastName(null);
         //person.setSensitiveData("I am sensitive data, do not show me!");
-        return person;
+        return personService.findById(id);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public List<PersonDTO> findAll() {
         return personService.findAll();
     }
 
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public PersonDTO update(@PathVariable("id") Long id,@RequestBody PersonDTO person) {
+    @PutMapping(value = "/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public PersonDTO update(@PathVariable("id") @RequestBody PersonDTO person) {
         return personService.update(person);
     }
 
