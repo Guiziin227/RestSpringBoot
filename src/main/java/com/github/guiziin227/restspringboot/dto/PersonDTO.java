@@ -3,6 +3,8 @@ package com.github.guiziin227.restspringboot.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.github.guiziin227.restspringboot.serializer.GenderSerializer;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -24,6 +26,7 @@ public class PersonDTO implements Serializable {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date birthDate;
 
+    @JsonSerialize(using = GenderSerializer.class)
     private String gender;
 
     public PersonDTO() {}
