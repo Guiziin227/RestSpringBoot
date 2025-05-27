@@ -6,6 +6,7 @@ import com.github.guiziin227.restspringboot.dto.PersonDTO;
 import static com.github.guiziin227.restspringboot.dto.mapper.ObjectMapper.parseListObjects;
 import static com.github.guiziin227.restspringboot.dto.mapper.ObjectMapper.parseObject;
 
+import com.github.guiziin227.restspringboot.exception.RequiredObjectIsNullException;
 import com.github.guiziin227.restspringboot.exception.ResourceNotFoundException;
 import com.github.guiziin227.restspringboot.model.Person;
 import com.github.guiziin227.restspringboot.repository.PersonRepository;
@@ -32,15 +33,17 @@ public class PersonService {
 
 
     public PersonDTO create(PersonDTO person) {
+        if (person == null) throw new RequiredObjectIsNullException("It is not allowed to persist a null object!");
         logger.info("Creating one person!");
-        Person entity = parseObject(person, Person.class);
-
-        PersonDTO dto = parseObject(personRepository.save(entity), PersonDTO.class);
+        var entity = parseObject(person, Person.class);
+        logger.info("Convertendo entity para DTO: " + entity);
+        var dto = parseObject(personRepository.save(entity), PersonDTO.class);
         addHateoasLinks(dto);
         return dto;
     }
 
     public PersonDTO update(PersonDTO person) {
+        if (person == null) throw new RequiredObjectIsNullException("It is not allowed to persist a null object!");
         logger.info("Updating one person!");
         Person p =  personRepository.findById(person.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Person not found!")
@@ -57,9 +60,9 @@ public class PersonService {
     }
 
     public void delete(Long id) {
-        logger.info("Deleting one person!");
-        personRepository.deleteById(id);
-
+        Person entity = personRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Person not found!"));
+        personRepository.delete(entity);
     }
 
     public List<PersonDTO> findAll() {
@@ -74,8 +77,8 @@ public class PersonService {
 
     public PersonDTO findById(Long id) {
         logger.info("Finding one person!");
-        Person entity = personRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Person not found!")
+        var entity = personRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Person not found! aqui")
         );
         PersonDTO dto =  parseObject(entity, PersonDTO.class);
         addHateoasLinks(dto);
