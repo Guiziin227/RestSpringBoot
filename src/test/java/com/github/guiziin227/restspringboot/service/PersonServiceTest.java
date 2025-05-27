@@ -1,51 +1,59 @@
 package com.github.guiziin227.restspringboot.service;
 
 import com.github.guiziin227.restspringboot.dto.PersonDTO;
+import com.github.guiziin227.restspringboot.exception.RequiredObjectIsNullException;
 import com.github.guiziin227.restspringboot.model.Person;
 import com.github.guiziin227.restspringboot.repository.PersonRepository;
-
-
 import com.github.guiziin227.restspringboot.unitetests.mapper.mocks.MockPerson;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @ExtendWith(MockitoExtension.class)
 class PersonServiceTest {
 
     MockPerson input;
 
     @InjectMocks
-    private PersonService service;
+    private PersonService personService;
 
     @Mock
-    PersonRepository repository;
+    private PersonRepository personRepository;
 
     @BeforeEach
     void setUp() {
         input = new MockPerson();
-        MockitoAnnotations.openMocks(this);
+        Mockito.reset(personRepository);
+    }
+
+    @AfterEach
+    void tearDown() {
     }
 
     @Test
-    void findById() {
+    void create() {
         Person person = input.mockEntity(1);
         person.setId(1L);
-        when(repository.findById(1L)).thenReturn(Optional.of(person));
 
-        PersonDTO result = service.findById(1L);
+        PersonDTO dto = input.mockDTO(1);
+
+        when(personRepository.save(person)).thenReturn(person);
+
+        var result = personService.create(dto);
 
         assertNotNull(result);
         assertNotNull(result.getId());
@@ -92,12 +100,16 @@ class PersonServiceTest {
     }
 
     @Test
-    void create() {
-    }
-
-    @Test
     void testCreateWithNullPerson() {
+        Exception exception = assertThrows(RequiredObjectIsNullException.class,
+                () -> {
+                    personService.create(null);
+                });
 
+        String expectedMessage = "It is not allowed to persist a null object!";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
@@ -108,10 +120,10 @@ class PersonServiceTest {
 
         PersonDTO dto = input.mockDTO(1);
 
-        when(repository.findById(1L)).thenReturn(Optional.of(person));
-        when(repository.save(person)).thenReturn(persisted);
+        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
+        when(personRepository.save(person)).thenReturn(persisted);
 
-        var result = service.update(dto);
+        var result = personService.update(dto);
 
         assertNotNull(result);
         assertNotNull(result.getId());
@@ -159,25 +171,34 @@ class PersonServiceTest {
 
     @Test
     void testUpdateWithNullPerson() {
+        Exception exception = assertThrows(RequiredObjectIsNullException.class,
+                () -> {
+                    personService.update(null);
+                });
+
+        String expectedMessage = "It is not allowed to persist a null object!";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
     void delete() {
         Person person = input.mockEntity(1);
         person.setId(1L);
-        when(repository.findById(1L)).thenReturn(Optional.of(person));
+        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
 
-        service.delete(1L);
-        verify(repository, times(1)).findById(anyLong());
-        verify(repository, times(1)).delete(any(Person.class));
-        verifyNoMoreInteractions(repository);
+        personService.delete(1L);
+        verify(personRepository, times(1)).findById(anyLong());
+        verify(personRepository, times(1)).delete(any(Person.class));
+        verifyNoMoreInteractions(personRepository);
     }
 
     @Test
     void findAll() {
         List<Person> list = input.mockEntityList();
-        when(repository.findAll()).thenReturn(list);
-        List<PersonDTO> people = service.findAll();
+        when(personRepository.findAll()).thenReturn(list);
+        List<PersonDTO> people = personService.findAll();
 
         assertNotNull(people);
         assertEquals(14, people.size());
@@ -317,4 +338,58 @@ class PersonServiceTest {
         assertEquals("Last Name Test7", personSeven.getLastName());
         assertEquals("Female", personSeven.getGender());
     }
+
+    @Test
+    void findById() {
+
+        Person person = input.mockEntity(1);
+        person.setId(1L);
+        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
+
+        var result = personService.findById(1L);
+
+        assertNotNull(result);
+        assertNotNull(result.getId());
+        assertNotNull(result.getLinks());
+
+        assertNotNull(result.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("self")
+                        && link.getHref().endsWith("/api/person/v1/1")
+                        && link.getType().equals("GET")
+                ));
+
+        assertNotNull(result.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("findAll")
+                        && link.getHref().endsWith("/api/person/v1")
+                        && link.getType().equals("GET")
+                )
+        );
+
+        assertNotNull(result.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("create")
+                        && link.getHref().endsWith("/api/person/v1")
+                        && link.getType().equals("POST")
+                )
+        );
+
+        assertNotNull(result.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("update")
+                        && link.getHref().endsWith("/api/person/v1")
+                        && link.getType().equals("PUT")
+                )
+        );
+
+        assertNotNull(result.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("delete")
+                        && link.getHref().endsWith("/api/person/v1/1")
+                        && link.getType().equals("DELETE")
+                )
+        );
+
+        assertEquals("Address Test1", result.getAddress());
+        assertEquals("First Name Test1", result.getFirstName());
+        assertEquals("Last Name Test1", result.getLastName());
+        assertEquals("Female", result.getGender());
+    }
+
 }
