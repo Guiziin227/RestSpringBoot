@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/person/v1")
-@Tag(name = "", description = "Endpoints for managing persons")
+@Tag(name = "People", description = "Endpoints for managing persons")
 public class PersonController implements com.github.guiziin227.restspringboot.controller.docs.PersonControllerDocs {
 
     @Autowired
