@@ -1,7 +1,14 @@
 package com.github.guiziin227.restspringboot.controller;
 
 import com.github.guiziin227.restspringboot.dto.BookDTO;
+import com.github.guiziin227.restspringboot.dto.PersonDTO;
 import com.github.guiziin227.restspringboot.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +26,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/book/v1")
-public class BookController {
+@Tag(name = "Book", description = "Endpoints for managing books")
+public class BookController implements com.github.guiziin227.restspringboot.controller.docs.BookControllerDocs {
 
     private final BookService bookService;
 
@@ -29,9 +37,11 @@ public class BookController {
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE
             })
+    @Override
     public List<BookDTO> findAll() {
         return bookService.findAll();
     }
+
 
     @GetMapping(value = "/{id}",
             produces = {
@@ -39,9 +49,11 @@ public class BookController {
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE
             })
+    @Override
     public BookDTO findById(@PathVariable("id") Long id) {
         return bookService.findById(id);
     }
+
 
 
     @PostMapping(
@@ -56,9 +68,11 @@ public class BookController {
                     MediaType.APPLICATION_YAML_VALUE
             }
     )
+    @Override
     public BookDTO create(@RequestBody BookDTO bookDTO) {
         return bookService.create(bookDTO);
     }
+
 
     @PutMapping(
             consumes = {
@@ -70,11 +84,13 @@ public class BookController {
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE
             })
+    @Override
     public BookDTO update(@RequestBody BookDTO bookDTO) {
         return bookService.update(bookDTO);
     }
 
     @DeleteMapping(value = "/{id}")
+    @Override
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         bookService.delete(id);
         return ResponseEntity.noContent().build();
