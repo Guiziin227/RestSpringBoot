@@ -7,6 +7,7 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.lifecycle.Startables;
+import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
 import java.util.stream.Stream;
@@ -16,8 +17,9 @@ public class AbstractIntegrationTest {
 
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-        static MySQLContainer<?> mysql = new MySQLContainer<>("docker pull mysql:9.1.0");
-
+        public static MySQLContainer<?> mysql = new MySQLContainer<>(
+                DockerImageName.parse("mysql:8.0.33").asCompatibleSubstituteFor("mysql")
+        );
         private static void startContainers() {
             Startables.deepStart(Stream.of(mysql)).join();
         }
@@ -35,8 +37,7 @@ public class AbstractIntegrationTest {
             return Map.of(
                     "spring.datasource.url", mysql.getJdbcUrl(),
                     "spring.datasource.username", mysql.getUsername(),
-                    "spring.datasource.password", mysql.getPassword(),
-                    "spring.datasource.driver-class-name", mysql.getDriverClassName()
+                    "spring.datasource.password", mysql.getPassword()
             );
         }
 
