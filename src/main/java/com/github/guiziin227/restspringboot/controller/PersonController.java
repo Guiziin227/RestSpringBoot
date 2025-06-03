@@ -26,7 +26,7 @@ public class PersonController implements com.github.guiziin227.restspringboot.co
     @Autowired
     private PersonService personService;
 
-    @CrossOrigin(origins = {"http://localhost:8080"})
+    //@CrossOrigin(origins = {"http://localhost:8080"})
     @PostMapping(
             consumes = {
                     MediaType.APPLICATION_JSON_VALUE,
@@ -51,7 +51,7 @@ public class PersonController implements com.github.guiziin227.restspringboot.co
         return ResponseEntity.noContent().build();
     }
 
-    @CrossOrigin(origins = {"http://localhost:8080"})
+    //@CrossOrigin(origins = {"http://localhost:8080"})
     @GetMapping(value = "/{id}",
             produces = {
                     MediaType.APPLICATION_JSON_VALUE,
