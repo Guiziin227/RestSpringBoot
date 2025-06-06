@@ -14,8 +14,17 @@ public class PersonDTO implements Serializable {
     private String address;
 
     private String gender;
+    private Boolean enabled;
 
     public PersonDTO() {
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Long getId() {
