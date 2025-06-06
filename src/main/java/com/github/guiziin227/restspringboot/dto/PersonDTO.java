@@ -26,6 +26,8 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
     private String address;
 
     private String gender;
+    private Boolean enabled;
+
 
     //@JsonInclude(JsonInclude.Include.NON_EMPTY)
    // private String phoneNumber;
@@ -37,6 +39,13 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
 
     public PersonDTO() {}
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public Long getId() {
         return id;
