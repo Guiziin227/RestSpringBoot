@@ -10,6 +10,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -38,8 +44,16 @@ public class BookController implements com.github.guiziin227.restspringboot.cont
                     MediaType.APPLICATION_YAML_VALUE
             })
     @Override
-    public List<BookDTO> findAll() {
-        return bookService.findAll();
+    public ResponseEntity<PagedModel<EntityModel<BookDTO>>> findAll(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction
+    ) {
+
+        Sort sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.by(Sort.Direction.DESC, "title") : Sort.by(Sort.Direction.ASC, "title");
+
+        Pageable pageable = PageRequest.of(page, size, sortDirection);
+        return ResponseEntity.ok(bookService.findAll(pageable));
     }
 
 
