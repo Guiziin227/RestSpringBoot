@@ -3,7 +3,6 @@ package com.github.guiziin227.restspringboot.service;
 import com.github.guiziin227.restspringboot.controller.PersonController;
 import com.github.guiziin227.restspringboot.dto.mapper.custom.PersonMapper;
 import com.github.guiziin227.restspringboot.dto.PersonDTO;
-import static com.github.guiziin227.restspringboot.dto.mapper.ObjectMapper.parseListObjects;
 import static com.github.guiziin227.restspringboot.dto.mapper.ObjectMapper.parseObject;
 
 import com.github.guiziin227.restspringboot.exception.RequiredObjectIsNullException;
@@ -16,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -102,6 +99,25 @@ public class PersonService {
         logger.info("findAll people!");
 
         var people = personRepository.findAll(pageable);
+
+        var peopleWithLinks = people.map(person -> {
+            PersonDTO dto = parseObject(person, PersonDTO.class);
+            addHateoasLinks(dto);
+            return dto;
+        });
+
+        Link findAllLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PersonController.class)
+                .findAll(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort()))).withRel("findAll");
+
+        return assembler.toModel(peopleWithLinks, findAllLink);
+
+    }
+
+    @Transactional
+    public PagedModel<EntityModel<PersonDTO>> findByName(String firstName, Pageable pageable) {
+        logger.info("findPeopleByName!");
+
+        var people = personRepository.findPeopleByName(firstName,pageable);
 
         var peopleWithLinks = people.map(person -> {
             PersonDTO dto = parseObject(person, PersonDTO.class);
