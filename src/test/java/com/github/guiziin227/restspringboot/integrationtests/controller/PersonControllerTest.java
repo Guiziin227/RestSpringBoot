@@ -24,6 +24,8 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
+import com.github.guiziin227.restspringboot.integrationtests.dto.wrapper.PersonEmbeddedDTO;
+import com.github.guiziin227.restspringboot.integrationtests.dto.wrapper.WrapperPersonDTO;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -70,10 +72,10 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertNotNull(createdPerson.getId());
         assertTrue(createdPerson.getId() > 0);
 
-        assertEquals("John", createdPerson.getFirstName());
-        assertEquals("Doe", createdPerson.getLastName());
-        assertEquals("123 Main St", createdPerson.getAddress());
-        assertEquals("Male", createdPerson.getGender());
+        assertEquals("Alina", createdPerson.getFirstName());
+        assertEquals("Phettis", createdPerson.getLastName());
+        assertEquals("7th Floors Main St", createdPerson.getAddress());
+        assertEquals("Female", createdPerson.getGender());
         assertTrue(createdPerson.getEnabled());
 
     }
@@ -98,10 +100,10 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertNotNull(createdPerson.getId());
         assertTrue(createdPerson.getId() > 0);
 
-        assertEquals("John", createdPerson.getFirstName());
+        assertEquals("Alina", createdPerson.getFirstName());
         assertEquals("Bruh", createdPerson.getLastName());
-        assertEquals("123 Main St", createdPerson.getAddress());
-        assertEquals("Male", createdPerson.getGender());
+        assertEquals("7th Floors Main St", createdPerson.getAddress());
+        assertEquals("Female", createdPerson.getGender());
         assertTrue(createdPerson.getEnabled());
 
     }
@@ -143,10 +145,10 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertNotNull(createdPerson.getId());
         assertTrue(createdPerson.getId() > 0);
 
-        assertEquals("John", createdPerson.getFirstName());
-        assertEquals("Doe", createdPerson.getLastName());
-        assertEquals("123 Main St", createdPerson.getAddress());
-        assertEquals("Male", createdPerson.getGender());
+        assertEquals("Alina", createdPerson.getFirstName());
+        assertEquals("Phettis", createdPerson.getLastName());
+        assertEquals("7th Floors Main St", createdPerson.getAddress());
+        assertEquals("Female", createdPerson.getGender());
         assertTrue(createdPerson.getEnabled());
 
     }
@@ -190,10 +192,10 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertNotNull(createdPerson.getId());
         assertTrue(createdPerson.getId() > 0);
 
-        assertEquals("John", createdPerson.getFirstName());
-        assertEquals("Doe", createdPerson.getLastName());
-        assertEquals("123 Main St", createdPerson.getAddress());
-        assertEquals("Male", createdPerson.getGender());
+        assertEquals("Alina", createdPerson.getFirstName());
+        assertEquals("Phettis", createdPerson.getLastName());
+        assertEquals("7th Floors Main St", createdPerson.getAddress());
+        assertEquals("Female", createdPerson.getGender());
         assertFalse(createdPerson.getEnabled());
 
     }
@@ -214,54 +216,58 @@ class PersonControllerTest extends AbstractIntegrationTest {
     @Test
     @Order(6)
     void findAll() throws JsonProcessingException {
-            PersonDTO firstPerson = new PersonDTO();
-            mockPerson();
-            firstPerson = person;
+        PersonDTO firstPerson = new PersonDTO();
+        mockPerson();
+        firstPerson = person;
 
-            // Cria a primeira pessoa no sistema
-            var createResponse1 = given(specification)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(firstPerson)
-                    .when()
-                    .post()
-                    .then()
-                    .statusCode(200)
-                    .extract().body().asString();
+        // Cria a primeira pessoa no sistema
+        var createResponse1 = given(specification)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(firstPerson)
+                .when()
+                .post()
+                .then()
+                .statusCode(200)
+                .extract().body().asString();
 
-            firstPerson = objectMapper.readValue(createResponse1, PersonDTO.class);
+        firstPerson = objectMapper.readValue(createResponse1, PersonDTO.class);
 
-            // Cria uma segunda pessoa com nome diferente, mas preenchendo todos os campos
-            PersonDTO secondPerson = new PersonDTO();
-            secondPerson.setFirstName("Jane");
-            secondPerson.setLastName("Doe");
-            secondPerson.setAddress("123 Main St");
-            secondPerson.setGender("Male");
-            secondPerson.setEnabled(true);
+        // Cria uma segunda pessoa com nome diferente
+        PersonDTO secondPerson = new PersonDTO();
+        secondPerson.setFirstName("Ana Paula");
+        secondPerson.setLastName("Henriques");
+        secondPerson.setAddress("Santa Maria - RS");
+        secondPerson.setGender("Feminino");
+        secondPerson.setEnabled(true);
 
-            // Cria a segunda pessoa no sistema
-            var createResponse2 = given(specification)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(secondPerson)
-                    .when()
-                    .post()
-                    .then()
-                    .statusCode(200)
-                    .extract().body().asString();
+        // Cria a segunda pessoa no sistema
+        var createResponse2 = given(specification)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(secondPerson)
+                .when()
+                .post()
+                .then()
+                .statusCode(200)
+                .extract().body().asString();
 
         secondPerson = objectMapper.readValue(createResponse2, PersonDTO.class);
 
-        // Busca todas as pessoas - adicionar contentType explicitamente
+        // Busca todas as pessoas com paginação
         var response = given(specification)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .queryParam("page", 0)
+                .queryParam("size", 10)
+                .queryParam("direction", "asc")
                 .when()
                 .get()
                 .then()
                 .statusCode(200)
                 .extract().body().asString();
 
-        // Corrigindo a forma de desserialização
-        List<PersonDTO> people = objectMapper.readValue(response,
-                objectMapper.getTypeFactory().constructCollectionType(List.class, PersonDTO.class));
+        // Desserialização usando o wrapper
+        WrapperPersonDTO wrapper = objectMapper.readValue(response, WrapperPersonDTO.class);
+        List<PersonDTO> people = wrapper.getEmbedded().getPeople();
+
         // Verifica se a lista contém pessoas
         assertNotNull(people);
         assertFalse(people.isEmpty());
@@ -273,17 +279,17 @@ class PersonControllerTest extends AbstractIntegrationTest {
         for (PersonDTO p : people) {
             if (p.getId().equals(firstPerson.getId())) {
                 foundFirstPerson = true;
-                assertEquals("John", p.getFirstName());
-                assertEquals("Doe", p.getLastName());
-                assertEquals("123 Main St", p.getAddress());
-                assertEquals("Male", p.getGender());
+                assertEquals("Alina", p.getFirstName());
+                assertEquals("Phettis", p.getLastName());
+                assertEquals("7th Floor", p.getAddress());
+                assertEquals("Female", p.getGender());
                 assertTrue(p.getEnabled());
             } else if (p.getId().equals(secondPerson.getId())) {
                 foundSecondPerson = true;
-                assertEquals("Jane", p.getFirstName());
-                assertEquals("Doe", p.getLastName());
-                assertEquals("123 Main St", p.getAddress());
-                assertEquals("Male", p.getGender());
+                assertEquals("Ana Paula", p.getFirstName());
+                assertEquals("Henriques", p.getLastName());
+                assertEquals("Santa Maria - RS", p.getAddress());
+                assertEquals("Feminino", p.getGender());
                 assertTrue(p.getEnabled());
             }
         }
@@ -292,12 +298,11 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertTrue(foundSecondPerson, "Não encontrou a segunda pessoa criada");
     }
 
-
     private void mockPerson() {
-        person.setFirstName("John");
-        person.setLastName("Doe");
-        person.setAddress("123 Main St");
-        person.setGender("Male");
+        person.setFirstName("Alina");
+        person.setLastName("Phettis");
+        person.setAddress("7th Floor");
+        person.setGender("Female");
         person.setEnabled(true);
     }
 

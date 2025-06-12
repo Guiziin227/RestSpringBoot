@@ -197,7 +197,6 @@ class PersonServiceTest {
     }
 
     @Test
-    @Disabled("Under development")
     void findAll() {
         List<Person> list = input.mockEntityList();
         when(personRepository.findAll()).thenReturn(list);
