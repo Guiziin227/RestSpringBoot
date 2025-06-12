@@ -83,15 +83,34 @@ public class PersonController implements com.github.guiziin227.restspringboot.co
                     MediaType.APPLICATION_YAML_VALUE
             })
     @Override
-    public ResponseEntity<PagedModel<EntityModel<PersonDTO>>>  findAll(
+    public ResponseEntity<PagedModel<EntityModel<PersonDTO>>> findAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
             @RequestParam(value = "direction", defaultValue = "asc") String direction
     ) {
-        Sort sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.by(Sort.Direction.DESC,"firstName") : Sort.by(Sort.Direction.ASC,"firstName");
+        Sort sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.by(Sort.Direction.DESC, "firstName") : Sort.by(Sort.Direction.ASC, "firstName");
 
         Pageable pageable = PageRequest.of(page, size, sortDirection);
         return ResponseEntity.ok(personService.findAll(pageable));
+    }
+
+    @GetMapping(value = "/findByName/{firstName}",
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE
+            })
+    @Override
+    public ResponseEntity<PagedModel<EntityModel<PersonDTO>>> findByName(
+            @PathVariable(value = "firstName") String firstName,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction
+    ) {
+        Sort sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.by(Sort.Direction.DESC, "firstName") : Sort.by(Sort.Direction.ASC, "firstName");
+
+        Pageable pageable = PageRequest.of(page, size, sortDirection);
+        return ResponseEntity.ok(personService.findByName(firstName,pageable));
     }
 
 
