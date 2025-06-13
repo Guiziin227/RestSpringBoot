@@ -9,15 +9,15 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "file")
 public class FileStorageConfig {
 
-    private String uploadir;
+    private String uploadDir;
 
     public FileStorageConfig() {}
 
-    public String getUploadir() {
-        return uploadir;
+    public String getUploadDir() {
+        return uploadDir;
     }
 
-    public void setUploadir(String uploadir) {
-        this.uploadir = uploadir;
+    public void setUploadDir(String uploadDir) {
+        this.uploadDir = uploadDir;
     }
 }
