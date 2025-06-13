@@ -1,6 +1,8 @@
 package com.github.guiziin227.restspringboot.exception.handler;
 
 import com.github.guiziin227.restspringboot.exception.ExceptionResponse;
+import com.github.guiziin227.restspringboot.exception.FileNotFoundException;
+import com.github.guiziin227.restspringboot.exception.FileStorageException;
 import com.github.guiziin227.restspringboot.exception.RequiredObjectIsNullException;
 import com.github.guiziin227.restspringboot.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -27,7 +29,7 @@ public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({ResourceNotFoundException.class})
+    @ExceptionHandler({ResourceNotFoundException.class, FileNotFoundException.class})
     public final ResponseEntity<ExceptionResponse> handleNotFoundException(Exception ex, WebRequest request) {
         ExceptionResponse resp = new ExceptionResponse(
                 new Date(),
@@ -46,4 +48,16 @@ public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler 
                 request.getDescription(false));
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler({FileStorageException.class})
+    public final ResponseEntity<ExceptionResponse> handleFileStorageException(Exception ex, WebRequest request) {
+        ExceptionResponse resp = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
 }
