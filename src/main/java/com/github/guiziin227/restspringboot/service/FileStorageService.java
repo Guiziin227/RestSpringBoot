@@ -23,7 +23,7 @@ public class FileStorageService {
 
     @Autowired
     public FileStorageService(FileStorageConfig fileStorageConfig) {
-        Path path = Path.of(fileStorageConfig.getUploadir()).toAbsolutePath()
+        Path path = Path.of(fileStorageConfig.getUploadDir()).toAbsolutePath()
                 .normalize();
 
         this.fileStorageLocation = path;
