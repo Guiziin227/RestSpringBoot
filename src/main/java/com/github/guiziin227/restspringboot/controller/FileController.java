@@ -24,7 +24,7 @@ public class FileController implements FileControllerDocs {
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
-    private FileStorageService fileStorageService;
+    private final FileStorageService fileStorageService;
 
     @PostMapping(value = "/upload")
     @Override
