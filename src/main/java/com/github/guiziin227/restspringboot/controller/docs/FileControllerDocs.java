@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
@@ -69,6 +70,6 @@ public interface FileControllerDocs {
             @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
         }
     )
-    ResponseEntity<ResponseEntity> downloadFile(String fileName, HttpServletRequest request );
+    ResponseEntity<Resource> downloadFile(String fileName, HttpServletRequest request );
 
 }
